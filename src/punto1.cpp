@@ -53,6 +53,7 @@ void reset(){
 
 
 void setup() {
+  Serial.begin(115200);
   for(int i=0;i<5;i++){
     pinMode(leds[i], OUTPUT);
   }
@@ -64,7 +65,7 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   server.on("/", []() { 
-    server.send(200, "text/html", HTML); 
+    server.send(200, "text/html", pagina_template); 
   });
 
 
@@ -72,7 +73,7 @@ void setup() {
   server.on("/animacion1", []() {
     // lo que haga el botón
     reset();
-    animacion==1;
+    animacion=1;
 
     
     server.sendHeader("Location", "/");
@@ -82,15 +83,16 @@ void setup() {
   server.on("/animacion2", []() {
     // lo que haga el botón
     reset();
-    animacion==2;
+    animacion=2;
 
     
     server.sendHeader("Location", "/");
     server.send(302);
   });
 
-  server.on("/apagado", []() {
+  server.on("/apagar", []() {
     // lo que haga el botón
+    animacion=0;
     reset();
 
     
@@ -111,12 +113,14 @@ void loop() {
     }
   }
   if(animacion==2){
-    for(int i=0;i<5;i++){
-      for(int j=0;j<3;j++){
+    for(int i=0;i<3;i++){
+      for(int j=0;j<5;j++){
         digitalWrite(leds[j], animacion2[i][j]);
       }
     }
   }
+  //se podria usar  millis usando el void loop en si en vez del for 
+  //si se quiere un resultado mas realista
 }
 
 

@@ -9,7 +9,7 @@ WebServer server(80);
 int rojo=10;
 int verde=11;
 int azul=12;
-String color="apagado";
+String color="Apagado";
 const char pagina_template[]=R"rawliteral(
 <!DOCTYPE html>
 <html>
@@ -42,10 +42,7 @@ const char pagina_template[]=R"rawliteral(
     </body>
 </html>
 )rawliteral";
-void cambiar_txt(){
-    String pagina=pagina_template;
-    pagina.replace("XXXX", color);
-}
+
 void setup(){
     Serial.begin(115200);
     pinMode(rojo, OUTPUT);
@@ -55,40 +52,37 @@ void setup(){
     WiFi.begin(ssid,password);
     while(WiFi.status()!=WL_CONNECTED) delay(500);
     server.on("/",[](){
-        server.send(200,"text/html",pagina_template);
+        String pagina=pagina_template;
+        pagina.replace("XXX", color);
+        server.send(200,"text/html",pagina);
     });
 
     server.on("/rojo",[](){
         color="Rojo";
-        cambiar_txt();
         server.sendHeader("Location","/");
         server.send(302);
     });
 
     server.on("/verde",[](){
         color="Verde";
-        cambiar_txt();
         server.sendHeader("Location","/");
         server.send(302);
     });
 
     server.on("/azul",[](){
         color="Azul";
-        cambiar_txt();
         server.sendHeader("Location","/");
         server.send(302);
     });
 
     server.on("/blanco",[](){
         color="Blanco";
-        cambiar_txt();
         server.sendHeader("Location","/");
         server.send(302);
     });
 
-    server.on("/apgado",[](){
+    server.on("/apagado",[](){
         color="Apagado";
-        cambiar_txt();
         server.sendHeader("Location","/");
         server.send(302);
     });
@@ -100,7 +94,7 @@ void setup(){
 void loop(){
     server.handleClient();
     if(color=="Rojo"){
-        analogWrite(rojo, 255);
+        analogWrite(rojo, 255); //se podria hacer con digitalWrite tambien
         analogWrite(verde,0);
         analogWrite(azul,0);
     }
